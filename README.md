@@ -46,6 +46,7 @@ CARE-BED/
 ├── Models_analysis.ipynb
 ├── dataset.zip
 └── Human_Activity_Recognition_with_Wi_Fi_Sensing_notes
+```
 ### File description
 * **`collecting_data.py`** – CSI acquisition from the serial stream and saving measurements to CSV
 * **`bilstm_5ac.py`** – real-time preprocessing and inference pipeline using the trained BiLSTM model
@@ -53,7 +54,7 @@ CARE-BED/
 * **`Models_analysis.ipynb`** – notebook for comparative analysis of different deep learning architectures
 * **`dataset.zip`** – dataset used in experiments
 * **`Human_Activity_Recognition_with_Wi_Fi_Sensing_notes`** – project notes and supporting documentation
-```
+
 ---
 
 ## Installation
