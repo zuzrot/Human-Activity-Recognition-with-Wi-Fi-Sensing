@@ -44,8 +44,7 @@ CARE-BED/
 ├── bilstm_5ac.py
 ├── 5_activities_bilstm_model.ipynb
 ├── Models_analysis.ipynb
-├── dataset.zip
-└── Human_Activity_Recognition_with_Wi_Fi_Sensing_notes
+└── dataset.zip
 ```
 ### File description
 * **`collecting_data.py`** – CSI acquisition from the serial stream and saving measurements to CSV
