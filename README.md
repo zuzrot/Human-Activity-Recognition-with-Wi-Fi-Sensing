@@ -238,18 +238,7 @@ This repository accompanies the engineering thesis:
 
 ## Citation
 
-If you use this repository, please cite the engineering thesis:
-
-```bibtex
-@misc{rotarska2025thesis,
-  author       = {Zuzanna Rotarska},
-  title        = {Human Activity Recognition with Wi-Fi Sensing},
-  year         = {2025},
-  note         = {Engineering Thesis, AGH University of Science and Technology in Krakow}
-}
-```
-
-You may also cite the repository itself:
+If you use this repository, please cite:
 
 ```bibtex
 @misc{har_wifi_repo,
