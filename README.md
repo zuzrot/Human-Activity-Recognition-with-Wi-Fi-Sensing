@@ -56,23 +56,14 @@ CARE-BED/
 * **`Human_Activity_Recognition_with_Wi_Fi_Sensing_notes`** – project notes and supporting documentation
 
 ---
-
 ## Installation
-It is recommended to use a dedicated Python environment.
 
-### Conda
+Install the required Python libraries:
+
 ```bash
-conda create -n care-bed python=3.12
-conda activate care-bed
 pip install numpy pandas scipy scikit-learn pyserial matplotlib tensorflow notebook jupyter
 ```
-### Virtual environment
-```bash
-python -m venv care-bed
-source care-bed/bin/activate   # Linux / macOS
-# Windows: care-bed\Scripts\activate
-pip install numpy pandas scipy scikit-learn pyserial matplotlib tensorflow notebook jupyter
-```
+
 The project was developed and tested using Python 3.12.
 
 ## Running Offline Experiments
