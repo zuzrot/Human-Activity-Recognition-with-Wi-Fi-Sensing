@@ -1,0 +1,14 @@
+recording_id,activity,source_file,start_row_1based,end_row_1based,valid_frames,first_timestamp_us,last_timestamp_us,elapsed_s,valid_frames_per_elapsed_s,W20_windows_stride5,W20_median_first_to_last_s
+A_inactivity_s01,inactivity,br_ak_merged.csv,1,1765,1765,2764691277,3702105388,937.414111,1.882839,350,12.424095
+A_inactivity_s02,inactivity,br_ak_merged.csv,1766,2427,662,12683781,343974352,331.290571,1.998246,129,10.409058
+A_inactivity_s03,inactivity,br_ak_merged.csv,2428,3095,668,2232177725,2563472935,331.295210,2.016329,130,10.411057
+A_inactivity_s04,inactivity,br_ak_merged.csv,3096,3202,107,793567213,847670529,54.103316,1.977698,18,12.417459
+A_lying_down_s01,lying down,lezenie_merged.csv,1,607,607,1309174008,1625588040,316.414032,1.918373,118,12.413082
+A_lying_down_s02,lying down,lezenie_merged.csv,608,1779,1172,1949987329,2559819434,609.832105,1.921840,231,12.421514
+A_lying_down_s03,lying down,lezenie_merged.csv,1780,2947,1168,2631629196,3237183454,605.554258,1.928811,230,10.447743
+A_sitting_up_s01,sitting up,siedzenie_merged.csv,1,601,601,847217377,1159505303,312.287926,1.924506,117,12.410311
+A_sitting_up_s02,sitting up,siedzenie_merged.csv,602,1739,1138,2724040661,3323346116,599.305455,1.898865,224,12.417339
+A_sitting_up_s03,sitting up,siedzenie_merged.csv,1740,2922,1183,3282938898,3889006942,606.068044,1.951926,233,10.426216
+A_fidgeting_s01,fidgeting,wiercenie_się_test.csv,1,1123,1123,435349572,1036321709,600.972137,1.868639,221,12.419004
+A_fidgeting_s02,fidgeting,wiercenie_się_test.csv,1124,1810,687,1354267198,1712215395,357.948197,1.919272,134,10.431139
+A_fidgeting_s03,fidgeting,wiercenie_się_test.csv,1811,2955,1145,2037689826,2645885109,608.195283,1.882619,226,12.415037
