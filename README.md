@@ -2,11 +2,11 @@
 
 ## Overview
 
-CARE-BED (**CSI-based Activity Recognition for Elderly–Bedside Event Detection**) is a low-cost, privacy-preserving system for real-time bedside activity monitoring using Wi-Fi Channel State Information (CSI) acquired with ESP32 devices.
+CARE-BED (**CSI-based Activity Recognition for Elderly–Bedside Event Detection**) is a low-cost, privacy-preserving system for real-time bedside activity recognition using Wi-Fi Channel State Information (CSI) acquired with ESP32 devices. The reported evaluation is a target-specific feasibility study with one adult participant in one residential room. Nighttime monitoring of older adults is the intended application; performance in older-adult populations, during uninterrupted overnight operation, or in unseen rooms has not been established.
 
 This repository accompanies the manuscript:
 
-**“A Low-Cost Wireless Channel State Information System for Real-Time Nighttime Bedside Activity Monitoring of Older Adults”**
+**“A Low-Cost Wireless Channel State Information System for Real-Time Bedside Activity Monitoring”**
 
 The system integrates:
 
@@ -21,14 +21,14 @@ The system integrates:
 - controlled ablation studies,
 - and continuous real-time activity recognition.
 
-CARE-BED focuses on four activity classes occurring within the monitored bedside area:
+CARE-BED recognizes four predefined conditions within the monitored bedside area:
 
-- `inactivity`
-- `lying down`
-- `sitting up`
-- `fidgeting`
+- `inactivity` — the monitored TX–RX sensing region is unoccupied;
+- `lying down` — a maintained lying posture in bed, not the movement of lying down;
+- `sitting up` — a maintained upright seated posture in bed, not the movement of sitting up;
+- `fidgeting` — irregular low-amplitude body movements while lying in bed.
 
-The current system is designed for single-person bedside monitoring. Walking, complete bed-exit events, falls, and room-scale mobility are outside the current classification scope.
+The current system is designed for single-person bedside monitoring. Walking, complete bed-exit events, falls, and room-scale mobility are outside the current classification scope. The experimental live protocol evaluated separately established conditions; it did not assess uninterrupted transitions between activities.
 
 ---
 
@@ -45,13 +45,17 @@ Human-Activity-Recognition-with-Wi-Fi-Sensing/
 │
 ├── datasets/
 │   ├── ConfigurationA_dataset.zip
-│   └── ConfigurationB_dataset.zip
+│   ├── ConfigurationB_dataset.zip
+│   ├── envA_dataset.zip
+│   └── carebed_new_data.zip
 │
 ├── notebooks/
 │   ├── Models_analysis.ipynb
 │   ├── CARE_BED_FINAL_A13_B12_W20_HSG_25fold_LORO.ipynb
 │   ├── CARE_BED_A13_B12_filter_ablation_W20_recording_disjoint_5fold.ipynb
-│   └── CARE_BED_A13_B12_window_ablation_W10_W20_W40_HSG_5fold.ipynb
+│   ├── CARE_BED_A13_B12_window_ablation_W10_W20_W40_HSG_5fold.ipynb
+│   ├── CARE_BED_ConfigurationA_timestamp_audit.py
+│   └── CARE_BED_ConfigurationA_timing_by_unit.csv
 │
 └── realtime/
     ├── CARE_BED_W20_HSG_single_recording_disjoint_live_model.ipynb
@@ -67,10 +71,12 @@ Human-Activity-Recognition-with-Wi-Fi-Sensing/
 
 #### `datasets/`
 
-- **`ConfigurationA_dataset.zip`** – recordings collected under Configuration A.
-- **`ConfigurationB_dataset.zip`** – recordings collected under Configuration B.
+- **`ConfigurationA_dataset.zip`** – archived Configuration A data (alternative published archive name).
+- **`ConfigurationB_dataset.zip`** – published Configuration B data archive.
+- **`envA_dataset.zip`** – archived Configuration A files under the exact name expected by the analysis notebooks.
+- **`carebed_new_data.zip`** – the original Configuration B session archive under the exact name expected by the analysis notebooks; only sessions `s01`, `s02`, and `s03` of each class are used in the final evaluation.
 
-Together, the final dataset contains **25 independent recordings and 27,883 valid CSI frames**.
+Together, the final evaluation dataset contains **25 recording-level units and 27,883 valid CSI frames**: 13 units retrospectively reconstructed from archived Configuration A data and 12 independently recorded Configuration B sessions.
 
 #### `notebooks/`
 
@@ -78,6 +84,8 @@ Together, the final dataset contains **25 independent recordings and 27,883 vali
 - **`CARE_BED_FINAL_A13_B12_W20_HSG_25fold_LORO.ipynb`** – principal offline evaluation using 25-fold recording-disjoint leave-one-recording-out validation.
 - **`CARE_BED_A13_B12_filter_ablation_W20_recording_disjoint_5fold.ipynb`** – fixed 5-fold recording-disjoint preprocessing-filter ablation.
 - **`CARE_BED_A13_B12_window_ablation_W10_W20_W40_HSG_5fold.ipynb`** – fixed 5-fold recording-disjoint temporal-window ablation.
+- **`CARE_BED_ConfigurationA_timestamp_audit.py`** – reproduces the archival Configuration A frame-rate and 20-frame elapsed-time calculations from ESP32 timestamps, including 32-bit timestamp wraparound.
+- **`CARE_BED_ConfigurationA_timing_by_unit.csv`** – unit-level timing statistics produced by the timestamp audit.
 
 #### `realtime/`
 
@@ -90,24 +98,26 @@ Together, the final dataset contains **25 independent recordings and 27,883 vali
 
 The final CARE-BED dataset contains:
 
-- **25 independent continuous recordings**
+- **25 recording-level evaluation units** (13 reconstructed from archival Configuration A data; 12 independent Configuration B recordings)
 - **27,883 valid CSI frames**
 - **4 activity classes**
-- **2 residential measurement configurations**
-- recordings from a single adult participant
+- **2 measurement configurations in one residential room**
+- occupied activity conditions performed by **one adult participant** (not an older-adult cohort)
 
 ### Configuration A
 
 Configuration A contains:
 
-- **13 recordings**
+- **13 reconstructed recording-level units**
 - **12,026 valid CSI frames**
 - 4 recordings of `inactivity`
 - 3 recordings of `lying down`
 - 3 recordings of `sitting up`
 - 3 recordings of `fidgeting`
 
-CSI acquisition was performed through Windows Subsystem for Linux 2 (WSL2) running Ubuntu, with the ESP32 USB interface forwarded using `usbipd-win`.
+Configuration A is an archival dataset from an earlier development phase. Its CSI data were preserved in four activity-specific merged CSV files. For the final evaluation, 13 recording-level units were reconstructed using discontinuities in the preserved ESP32 timestamps; explicit row-index boundaries are provided in the 25-fold LORO notebook. Preprocessing and window extraction were performed separately for each reconstructed unit, with no window crossing a unit boundary.
+
+Acquisition used Windows Subsystem for Linux 2 (WSL2) running Ubuntu, with the ESP32 USB interface forwarded using `usbipd-win`.
 
 The serial connection operated at:
 
@@ -115,11 +125,9 @@ The serial connection operated at:
 115200 bps
 ```
 
-The observed effective valid-CSI-frame rate was approximately:
+Retrospective analysis of local ESP32 timestamps yielded an effective rate of approximately **1.92 valid CSI frames/s**, computed from **12,026 frames** divided by the sum of first-to-last-frame elapsed intervals across the 13 reconstructed units. Frame arrivals were nonuniform, including short bursts separated by multi-second gaps.
 
-```text
-10.63 Hz
-```
+For the generated 20-frame windows (stride 5), the **median elapsed time from the first to the twentieth frame was approximately 10.47 s**. These values describe the archived recordings; they are not a controlled measurement of sustained receiver throughput. The available data do not establish the technical cause of the observed gaps. The calculation is reproducible using `notebooks/CARE_BED_ConfigurationA_timestamp_audit.py`.
 
 ### Configuration B
 
@@ -127,7 +135,15 @@ Configuration B contains:
 
 - **12 recordings**
 - **15,857 valid CSI frames**
-- 3 independent recordings per activity class
+- 3 independent recordings per activity class (`s01`, `s02`, `s03`), selected from the original session archive
+
+The acquisition order was rotated across these three series rather than recording all sessions of each class consecutively:
+
+- **s01:** `inactivity` → `lying down` → `sitting up` → `fidgeting`
+- **s02:** `lying down` → `sitting up` → `fidgeting` → `inactivity`
+- **s03:** `sitting up` → `fidgeting` → `inactivity` → `lying down`
+
+This reduces one potential acquisition-order confound but does **not** rule out session-specific CSI drift or other label-correlated conditions.
 
 Acquisition was performed directly under Windows 11 using `pySerial`.
 
@@ -137,13 +153,9 @@ The serial connection operated at:
 921600 bps
 ```
 
-The observed effective valid-CSI-frame rate was approximately:
+The effective accepted-frame rate was approximately **10.95 Hz**, estimated from the number of accepted CSI frames and the host-measured recording duration. The ESP32 packet transmission rate was configured to 100 Hz. At this effective rate, collecting 20 valid frames corresponds to a **nominal buffer-filling time of approximately 1.83 s**; this is a rate-based estimate, not a directly measured first-to-last-frame interval.
 
-```text
-10.95 Hz
-```
-
-Configuration B was also used for the real-time evaluation.
+**Only Configuration B was used for the 80-trial real-time evaluation.** The historical Configuration A conditions were not re-established for a separate live evaluation.
 
 ---
 
@@ -192,6 +204,8 @@ The final deployed classifier input is therefore:
 ```text
 20 frames × 54 features
 ```
+
+Windows are defined by **20 accepted frames**, not by a fixed elapsed duration. The pipeline does not perform timestamp-based resampling, compensate for irregular inter-frame intervals, or reject windows containing long timestamp gaps. Consequently, the physical duration of the input can differ between measurement configurations, and input-acquisition time should not be confused with computational inference time.
 
 ### Filtering Parameters
 
@@ -259,7 +273,7 @@ fidgeting
 
 ## Evaluation Protocols
 
-CARE-BED uses **three distinct recording-disjoint evaluation protocols**.
+CARE-BED uses **three distinct evaluation protocols with recording-level separation between development and testing**. The 25 units comprise 13 reconstructed archival units from Configuration A and 12 separate recording sessions from Configuration B.
 
 These protocols serve different purposes and should not be interpreted as interchangeable cross-validation results.
 
@@ -316,9 +330,9 @@ first 80% of raw frames → training
 final 20% of raw frames → validation
 ```
 
-The five held-out recordings remain completely excluded from training, validation, feature-standardization fitting, and model selection.
+The five test units were selected by a **class-stratified random recording-level split** (`StratifiedShuffleSplit`, `test_size=5`, `random_state=42`), stratifying by activity rather than configuration. The test set contained **two inactivity units and one unit for each other class**, with **four units from Configuration B and one from Configuration A**. The 20 development units contained five units per activity class.
 
-The resulting model is evaluated on these five recordings and subsequently frozen for real-time use.
+The five test units were excluded from deployment-model training, validation, feature-standardization fitting and weight selection. They had nevertheless been included in the separate five-fold ablation studies conducted on all 25 units, so the holdout was not independent of all earlier pipeline-design comparisons. The resulting single deployment model was evaluated on these five test units and subsequently frozen for real-time use.
 
 This procedure is implemented in:
 
@@ -340,6 +354,8 @@ The 25-fold recording-disjoint leave-one-recording-out evaluation produced:
 | Macro F1-score | **77.06%** |
 | Weighted F1-score | **77.19%** |
 
+The **unweighted mean accuracy across the 25 held-out units was 76.96% ± 27.03 percentage points (mean ± sample SD)**. Unlike the pooled accuracy of 77.51%, this unit-level mean gives equal weight to each held-out unit. From the same 25-fold held-out predictions, configuration-specific pooled accuracies were **77.47% (A)** and **77.54% (B)**; this does not isolate the effect of the very different frame-arrival patterns, because the acquisition setup and multipath conditions also differed.
+
 Class-wise results:
 
 | Activity | Precision | Recall | F1-score |
@@ -357,26 +373,26 @@ Class-wise results:
 
 Hampel filtering followed by Savitzky–Golay smoothing was kept fixed while the temporal-window length was varied.
 
-| Window size | Accuracy | Macro F1-score |
-|---|---:|---:|
-| 10 frames | 74.90% | 74.47% |
-| **20 frames** | **79.60%** | **79.09%** |
-| 40 frames | 77.83% | 77.37% |
+| Window size | Pooled accuracy | Pooled macro F1 | Fold accuracy (mean ± SD) | Fold macro F1 (mean ± SD) |
+|---|---:|---:|---:|---:|
+| 10 frames | 74.90% | 74.47% | 75.07 ± 14.08% | 73.82 ± 14.89% |
+| **20 frames** | **79.60%** | **79.09%** | 79.47 ± 12.20% | 77.61 ± 14.97% |
+| 40 frames | 77.83% | 77.37% | 78.24 ± 12.05% | 76.80 ± 13.61% |
 
-The 20-frame configuration achieved the highest accuracy and macro F1-score among the evaluated window lengths.
+The 20-frame variant had the highest **pooled** scores, but fold-wise variability was substantial. Its paired accuracy difference versus 10 frames was **4.41 ± 3.57 percentage points** (better in four of five folds), and versus 40 frames **1.24 ± 4.19 percentage points** (better in two of five folds). Thus, 20 frames were retained as a practical compromise between temporal context and input-acquisition latency, **not as a statistically established superior choice**.
 
 ### Preprocessing-Filter Ablation
 
 The temporal-window size was fixed to 20 frames.
 
-| Preprocessing | Accuracy | Macro F1-score |
-|---|---:|---:|
-| No filtering | 78.44% | 77.73% |
-| Hampel only | 79.18% | 78.63% |
-| Savitzky–Golay only | 78.29% | 77.57% |
-| **Hampel + Savitzky–Golay** | **79.60%** | **79.09%** |
+| Preprocessing | Pooled accuracy | Pooled macro F1 | Fold accuracy (mean ± SD) | Fold macro F1 (mean ± SD) |
+|---|---:|---:|---:|---:|
+| No filtering | 78.44% | 77.73% | 78.61 ± 13.20% | 76.75 ± 15.23% |
+| Hampel only | 79.18% | 78.63% | 79.15 ± 11.29% | 77.61 ± 12.98% |
+| Savitzky–Golay only | 78.29% | 77.57% | 78.22 ± 12.17% | 76.08 ± 14.93% |
+| **Hampel + Savitzky–Golay** | **79.60%** | **79.09%** | 79.47 ± 12.20% | 77.61 ± 14.97% |
 
-The combined Hampel and Savitzky–Golay pipeline was retained in the final CARE-BED configuration.
+The combined pipeline had the highest pooled scores, but the advantage over Hampel-only filtering was small relative to fold-wise variability: paired accuracy difference **0.33 ± 2.01 percentage points**, and paired macro F1 difference **0.01 ± 2.74 percentage points**. It performed better in only two of five folds. The combined pipeline was retained as a practical implementation choice, **not because a consistent or statistically significant superiority had been established**.
 
 ---
 
@@ -402,6 +418,8 @@ Class-wise performance:
 | Lying down | 0.624 | 0.425 | 0.506 |
 | Sitting up | 0.623 | 1.000 | 0.768 |
 | Fidgeting | 0.957 | 0.766 | 0.851 |
+
+The pooled test accuracy of **80.03%** was calculated over **1,172 held-out test windows**. The **unweighted mean test accuracy across the five test units was 81.44% ± 23.44 percentage points (mean ± sample SD)**, illustrating substantial recording-to-recording variability. In this split, training comprised 3,440 windows and validation 811 windows from the 20 development units; the test set comprised 1,172 windows from the five held-out units.
 
 The same trained model, scaler, and label encoder are subsequently used unchanged for real-time inference.
 
@@ -478,10 +496,12 @@ The real-time experiment was conducted using Configuration B.
 
 The evaluation contained:
 
-- **80 randomized trials**
+- **80 live trials** organized into 20 repetitions, with all four conditions appearing once per repetition in randomized order
 - **20 trials per activity**
-- exactly one newly acquired 20-frame classifier input per trial
+- the participant first established the requested posture/movement condition; `inactivity` meant an unoccupied sensing region
+- the serial input buffer was cleared after preparation and before collecting **20 new valid CSI frames** for one prediction
 - no retraining or parameter adjustment based on live results
+- no evaluation of uninterrupted transitions or trial-to-trial temporal smoothing
 
 The frozen deployment model was used unchanged.
 
@@ -496,35 +516,27 @@ The frozen deployment model was used unchanged.
 | Macro F1-score | **73.71%** |
 | Weighted F1-score | 73.71% |
 
-The dominant live error mode was confusion between `lying down` and `sitting up`.
+For **live accuracy**, the **95% Wilson confidence interval was 63.18–82.14%** (59/80 correct). For **macro F1**, the **95% percentile bootstrap confidence interval was 64.69–82.34%**, based on 100,000 class-stratified resamples (seed 42).
 
-Importantly, none of the 60 live trials corresponding to `lying down`, `sitting up`, or `fidgeting` was classified as `inactivity`.
+The dominant live error mode was confusion between `lying down` and `sitting up`: 10 of 20 `lying down` trials were predicted as `sitting up`, while 5 of 20 `sitting up` trials were predicted as `lying down`. Both `inactivity` and `fidgeting` were correctly recognized in 18 of 20 trials.
+
+None of the 60 live trials corresponding to an occupied condition (`lying down`, `sitting up`, or `fidgeting`) was classified as `inactivity`. However, **live inactivity precision of 1.00 was based on 18 predictions**, with a **95% Wilson interval of 0.824–1.000**; inactivity recall was 0.90 (18/20; **95% Wilson interval 0.699–0.972**). The observed precision must not be interpreted as a guarantee of error-free operation.
 
 ---
 
 ## Runtime Characteristics
 
-Software-level processing measurements reported in the study were:
+The following **stage-specific means were measured in Google Colab**, not on the Windows deployment host:
 
-| Stage | Mean time |
+| Google Colab stage | Mean time |
 |---|---:|
 | Parsing | 0.05 ms per CSI frame |
 | Preprocessing | 83.15 ms per 20-frame segment |
 | Inference | 67.48 ms per 20-frame segment |
 
-For Configuration B, the effective accepted-frame rate was approximately:
+**Illustrative Windows 11 deployment-host measurements** shown in the manuscript console examples ranged from **approximately 185 to 267 ms for combined preprocessing and inference**. These were individual observations, not an average across all 80 live trials; the Colab stage breakdown and combined Windows-host measurements are not directly equivalent benchmarks.
 
-```text
-10.95 Hz
-```
-
-Therefore, acquiring the 20 valid CSI frames required for one classifier input takes approximately:
-
-```text
-1.83 s
-```
-
-CSI acquisition time and computational processing time are reported separately.
+**CSI input acquisition is separate from software processing.** In Configuration B, the effective rate of approximately 10.95 accepted frames/s gives a **nominal buffer-filling time of approximately 1.83 s** for 20 valid frames, excluding any subsequent processing. In historical Configuration A windows, the median observed first-to-last-frame interval was instead 10.47 s, reflecting nonuniform archival frame arrival. Equivalent real-time responsiveness under Configuration A was not evaluated.
 
 ---
 
@@ -588,7 +600,13 @@ Start Jupyter:
 jupyter notebook
 ```
 
-Then open the required notebook.
+Then open the required notebook. The four final CARE-BED notebooks expect `envA_dataset.zip` and `carebed_new_data.zip` to be uploaded or made available in their working directory (e.g. in Google Colab). The first archive supplies the 13 reconstructed Configuration A units; the second supplies Configuration B session files, of which **only `s01`, `s02`, and `s03` per class** are selected by the final notebooks. `ConfigurationA_dataset.zip` and `ConfigurationB_dataset.zip` are the alternative published archive names; **do not assume that renaming an archive changes its internal folder layout**.
+
+To reproduce the archival timing verification (from the repository root):
+
+```bash
+python notebooks/CARE_BED_ConfigurationA_timestamp_audit.py --input datasets/envA_dataset.zip --output notebooks/CARE_BED_ConfigurationA_timing_by_unit.csv
+```
 
 ### Principal Offline Evaluation
 
@@ -614,7 +632,7 @@ notebooks/CARE_BED_A13_B12_window_ablation_W10_W20_W40_HSG_5fold.ipynb
 notebooks/Models_analysis.ipynb
 ```
 
-The `Models_analysis.ipynb` notebook documents the internal model-selection experiments. It should not be interpreted as the principal recording-disjoint performance estimate of the final CARE-BED classifier.
+The `Models_analysis.ipynb` notebook documents **exploratory architecture selection** on a different, seven-class dataset with 200-frame windows. The preserved ViT experiment used a stratified random 80/20 segment-level split, with standardization fitted before the split; therefore these historical comparisons should **not** be treated as recording-disjoint benchmarks. GRU and BiLSTM showed comparable approximate accuracy in preliminary experiments, and BiLSTM was selected for suitable bidirectional window-based modelling, **not** for a demonstrated accuracy advantage over GRU. The principal final CARE-BED performance estimate is the separate 25-fold recording-disjoint experiment.
 
 ---
 
@@ -674,7 +692,7 @@ The evaluation protocols in this repository have deliberately different purposes
 - **single deployment split**  
   produces and evaluates the one frozen model subsequently used for real-time recognition.
 
-The 25-fold and 5-fold results therefore correspond to different experimental protocols and should not be interpreted as two estimates obtained from the same cross-validation procedure.
+The 25-fold and 5-fold results therefore correspond to different experimental protocols and should not be interpreted as two estimates obtained from the same cross-validation procedure. Moreover, the **training and validation frame partitions come from different time ranges within the same development units**; only the outer test recordings are disjoint from the development set. The available experiments do **not** establish user-independent, cross-room, or uninterrupted overnight/transition recognition performance. The exploratory architecture-selection experiments in `Models_analysis.ipynb` are **not** the principal recording-disjoint evaluation of CARE-BED.
 
 ---
 
