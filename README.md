@@ -45,9 +45,7 @@ Human-Activity-Recognition-with-Wi-Fi-Sensing/
 │
 ├── datasets/
 │   ├── ConfigurationA_dataset.zip
-│   ├── ConfigurationB_dataset.zip
-│   ├── envA_dataset.zip
-│   └── carebed_new_data.zip
+│   └── ConfigurationB_dataset.zip
 │
 ├── notebooks/
 │   ├── Models_analysis.ipynb
@@ -71,10 +69,8 @@ Human-Activity-Recognition-with-Wi-Fi-Sensing/
 
 #### `datasets/`
 
-- **`ConfigurationA_dataset.zip`** – archived Configuration A data (alternative published archive name).
-- **`ConfigurationB_dataset.zip`** – published Configuration B data archive.
-- **`envA_dataset.zip`** – archived Configuration A files under the exact name expected by the analysis notebooks.
-- **`carebed_new_data.zip`** – the original Configuration B session archive under the exact name expected by the analysis notebooks; only sessions `s01`, `s02`, and `s03` of each class are used in the final evaluation.
+- **`ConfigurationA_dataset.zip`** – archival Configuration A CSI data, including four activity-specific CSV files.
+- **`ConfigurationB_dataset.zip`** – published Configuration B CSI dataset. The final evaluation uses three recording sessions (`s01`–`s03`) per activity.
 
 Together, the final evaluation dataset contains **25 recording-level units and 27,883 valid CSI frames**: 13 units retrospectively reconstructed from archived Configuration A data and 12 independently recorded Configuration B sessions.
 
@@ -600,12 +596,12 @@ Start Jupyter:
 jupyter notebook
 ```
 
-Then open the required notebook. The four final CARE-BED notebooks expect `envA_dataset.zip` and `carebed_new_data.zip` to be uploaded or made available in their working directory (e.g. in Google Colab). The first archive supplies the 13 reconstructed Configuration A units; the second supplies Configuration B session files, of which **only `s01`, `s02`, and `s03` per class** are selected by the final notebooks. `ConfigurationA_dataset.zip` and `ConfigurationB_dataset.zip` are the alternative published archive names; **do not assume that renaming an archive changes its internal folder layout**.
+Then open the required notebook. The published datasets are `datasets/ConfigurationA_dataset.zip` and `datasets/ConfigurationB_dataset.zip`. The four final experiment notebooks were originally written to load these data under the local source-archive filenames `envA_dataset.zip` and `carebed_new_data.zip`. **These are alternative input filenames, not additional datasets to upload to the repository.** Before reproducing an experiment, configure the notebook to use the published archives and verify that the expected internal directories (`envA_dataset/` and `carebed_new_data/`) are present. The final evaluation uses three Configuration B sessions (`s01`–`s03`) per activity.
 
 To reproduce the archival timing verification (from the repository root):
 
 ```bash
-python notebooks/CARE_BED_ConfigurationA_timestamp_audit.py --input datasets/envA_dataset.zip --output notebooks/CARE_BED_ConfigurationA_timing_by_unit.csv
+python notebooks/CARE_BED_ConfigurationA_timestamp_audit.py --input datasets/ConfigurationA_dataset.zip --output notebooks/CARE_BED_ConfigurationA_timing_by_unit.csv
 ```
 
 ### Principal Offline Evaluation
